@@ -1,0 +1,7 @@
+<div class="upload-container">
+  <h1>Upload Document</h1>
+  <input type="file" (change)="onFileSelected($event)" />
+  <button (click)="uploadDocument()">Upload</button>
+  <h4 *ngIf="fetching">Fetching results...</h4>
+</div>
+<router-outlet></router-outlet>
