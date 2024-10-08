@@ -13,17 +13,26 @@ interface ApiResponse {
   styleUrls: ['./app.component.scss']
 })
 export class AppComponent {
-  title = 'compsnippets';
+  title = 'cbo-erp';
   selectedFile: File | null = null;
   fetching = false;
+  accessToken = ""
 
   constructor(private http: HttpClient) {}
+
+  ngOnInit(){
+    this.getAccessToken().subscribe((token: any) => { this.accessToken = token.token.token })
+  }
 
   onFileSelected(event: Event) {
     const target = event.target as HTMLInputElement;
     if (target.files && target.files.length) {
       this.selectedFile = target.files[0];
     }
+  }
+
+  getAccessToken() {
+    return this.http.get<{ token: string }>('http://localhost:3000/generate-token');
   }
 
   uploadDocument() {
@@ -49,9 +58,8 @@ export class AppComponent {
       },
     };
 
-    const token = "ya29.c.c0ASRK0GYz2Cco66lGzyr4TQaiYH1kqO6POmyOXda0vsSErCQUgGnntZ81WBMxh3HWuaDMrUqpUd3nTfdgMM9SEErJbTDRoZvEcec_lKFXQeAXd52w3LTLMffCgM7BSBRxoNGc6GEw1GS7Owa0Q3AHnBDx0NDke7hQ6YymebQwVo0OCIAkarwRhIJbd8SvYIeBKaKEmuJ5snzIvU2bdRzZSzz5WxYjXUUjFF24fNTQbFK1CXoOCjhnvZixGzfEMoMlUWuTTGhbojToEQ_l1j0ZlSyAdmggZy70OU4FpO0dh7V-euOMNu0CiQKrmXWQkxenGIeqljn_7emPQjRIiucgWtpxG6ZsaTMYS9R_fUSkcBvoIHz2z49wQk-CqsyLZBI3USB4EgN399Pau3ev3mMx79nimrt8Fh87ytlXfk6q0Vvcu-fZn61V9-BknzmUOshbguB4FWZ8y2uOrtkght0seq0V3dSa2btUlj-j_eXU1eakaRbd--n6Fo9iVhUdVSccr7ywM3gelW18iVuY5FBi6p4SQVqfvI5Utzup_vpaexd_i35Y-6uXcMjlBzuWF1y3dJa2yFhySjORz03sccjQ9a-brdlc_hxbwX45iWqocliWweks7WQU81skayS0w747w751V7kwr09gdrxur3Yxz486Zcg8feFufvoIS9d9cFvamjxhj9OOIx3ooxMyqO912QS26Uku9X4dhlekOUqdB6hi_7z123SvZSrFiY6O4kwMceIrl-4VXdYRS-yoFg9hsff79hWtQR8eJy9driVfZfBcxb8dgdzbB1jV4Ox_aWbR1SFufe0B0W5tBu0ue5RY_zlVS2fU1ce1Weq8hV3l_uX8RIZ2QWlqFwUBJ55sw45ja3nBR2gtydWhl47-UkmR98nnchh5mequiMBi75xidIMkfmFIrViJdk5V4Xg9nVFV5SvpcBajyYdspV6sOmak_b5h8VUoeQYiO0O0rMfgqyxe3ttBFBmJxtyhgJ_aesYRcJneM_qs5x5"
     const headers = {
-      Authorization: `Bearer ${token}`,
+      Authorization: `Bearer ${this.accessToken}`,
       'Content-Type': 'application/json',
     };
 

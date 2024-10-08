@@ -12,16 +12,16 @@ describe('AppComponent', () => {
     expect(app).toBeTruthy();
   });
 
-  it(`should have as title 'compsnippets'`, () => {
+  it(`should have as title 'cbo-erp'`, () => {
     const fixture = TestBed.createComponent(AppComponent);
     const app = fixture.componentInstance;
-    expect(app.title).toEqual('compsnippets');
+    expect(app.title).toEqual('cbo-erp');
   });
 
   it('should render title', () => {
     const fixture = TestBed.createComponent(AppComponent);
     fixture.detectChanges();
     const compiled = fixture.nativeElement as HTMLElement;
-    expect(compiled.querySelector('.content span')?.textContent).toContain('compsnippets app is running!');
+    expect(compiled.querySelector('.content span')?.textContent).toContain('cbo-erp app is running!');
   });
 });
