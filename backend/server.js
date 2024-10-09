@@ -3,7 +3,7 @@ const { GoogleAuth } = require('google-auth-library');
 const cors = require('cors');
 
 const app = express();
-app.use(cors({ origin: 'http://localhost:4200'}));
+app.use(cors({ origin: 'http://localhost:56052'}));
 
 app.get('/generate-token', async (req, res) => {
     const auth = new GoogleAuth({

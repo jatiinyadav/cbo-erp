@@ -3,6 +3,7 @@ import { Component } from '@angular/core';
 import * as XLSX from 'xlsx';
 
 interface ApiResponse {
+  properties: ApiResponse[];
   type: string,
   mentionText: string
 }
@@ -95,31 +96,56 @@ export class AppComponent {
 
   downloadAsExcel(apiResponse: ApiResponse[]) {
     const dataMap: { [key: string]: string[] } = {};
-
+  
+    // Process the main apiResponse
     apiResponse.forEach(obj => {
-      if (!dataMap[obj.type]) {
-        dataMap[obj.type] = [];
+      if (obj.type === 'line-item') {
+        obj.properties.forEach(prop => {
+          if (!dataMap[prop.type]) {
+            dataMap[prop.type] = [];
+          }
+          // Push mentionText in the existing array (new row under the same column)
+          dataMap[prop.type].push(prop.mentionText);
+        });
+      } else {
+        // Initialize or push to ensure no overwrite happens
+        if (!dataMap[obj.type]) {
+          dataMap[obj.type] = [];
+        }
+        dataMap[obj.type].push(obj.mentionText);
       }
-      dataMap[obj.type].push(obj.mentionText);
     });
-
+  
     const columns = Object.keys(dataMap);
     const maxRows = Math.max(...columns.map(col => dataMap[col].length));
-
+  
+    // Fill missing data in each column with the first row's value
+    columns.forEach(col => {
+      const firstRowValue = dataMap[col][0] || '';
+      for (let i = 0; i < maxRows; i++) {
+        if (!dataMap[col][i]) {
+          dataMap[col][i] = firstRowValue;  // Fill missing data with the first row's value
+        }
+      }
+    });
+  
     const worksheetData: any[][] = [];
     worksheetData.push(columns);
-
+  
     for (let rowIndex = 0; rowIndex < maxRows; rowIndex++) {
       const row: any[] = [];
       columns.forEach(col => {
-        row.push(dataMap[col][rowIndex] || '');
+        row.push(dataMap[col][rowIndex] || '');  // Fill in data row-wise
       });
       worksheetData.push(row);
     }
-
+  
     const ws: XLSX.WorkSheet = XLSX.utils.aoa_to_sheet(worksheetData);
     const wb: XLSX.WorkBook = XLSX.utils.book_new();
     XLSX.utils.book_append_sheet(wb, ws, 'Results');
     XLSX.writeFile(wb, 'APIResults.xlsx');
   }
+  
+  
+  
 }
