@@ -51,7 +51,7 @@ export class AppComponent {
   }
 
   makeApiCall(base64String: string) {
-    const apiUrl = 'https://documentai.googleapis.com/v1/projects/hardy-album-437408-b2/locations/us/processors/311e01813fd54474:process';
+    const apiUrl = 'https://documentai.googleapis.com/v1/projects/220023639180/locations/us/processors/b42a3559de5c510f:process';
     const requestBody = {
       rawDocument: {
         content: base64String,
@@ -97,18 +97,15 @@ export class AppComponent {
   downloadAsExcel(apiResponse: ApiResponse[]) {
     const dataMap: { [key: string]: string[] } = {};
   
-    // Process the main apiResponse
     apiResponse.forEach(obj => {
-      if (obj.type === 'line-item') {
+      if (obj.type === 'line-item' || obj.type === 'lineItem') {
         obj.properties.forEach(prop => {
           if (!dataMap[prop.type]) {
             dataMap[prop.type] = [];
           }
-          // Push mentionText in the existing array (new row under the same column)
           dataMap[prop.type].push(prop.mentionText);
         });
       } else {
-        // Initialize or push to ensure no overwrite happens
         if (!dataMap[obj.type]) {
           dataMap[obj.type] = [];
         }
@@ -119,12 +116,11 @@ export class AppComponent {
     const columns = Object.keys(dataMap);
     const maxRows = Math.max(...columns.map(col => dataMap[col].length));
   
-    // Fill missing data in each column with the first row's value
     columns.forEach(col => {
       const firstRowValue = dataMap[col][0] || '';
       for (let i = 0; i < maxRows; i++) {
         if (!dataMap[col][i]) {
-          dataMap[col][i] = firstRowValue;  // Fill missing data with the first row's value
+          dataMap[col][i] = firstRowValue;
         }
       }
     });
