@@ -3,11 +3,11 @@ const { GoogleAuth } = require('google-auth-library');
 const cors = require('cors');
 
 const app = express();
-app.use(cors({ origin: 'http://localhost:61491'}));
+app.use(cors({ origin: 'http://localhost:4200'}));
 
 app.get('/generate-token', async (req, res) => {
     const auth = new GoogleAuth({
-        keyFile: 'C:/Users/YADAVJA/Downloads/hardy-album-437408-b2-6bb943707858.json',
+        keyFile: 'C:/Users/YADAVJA/Downloads/hardy-album-437408-b2-10e0b69d45e4.json',
         scopes: 'https://www.googleapis.com/auth/cloud-platform',
     });
 
